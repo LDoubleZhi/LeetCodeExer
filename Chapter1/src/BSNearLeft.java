@@ -3,6 +3,7 @@
  * @date: 2020/07/05/20:59
  * @description:在有序数组中，找>=某个数最左侧的位置
  * 或者<=某个数最右边的位置
+ 满足条件时候记录即可
  */
 public class BSNearLeft {
     public static int search(int[] nums, int target) {
