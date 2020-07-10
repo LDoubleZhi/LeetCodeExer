@@ -2,63 +2,42 @@ import java.util.Arrays;
 
 /**
  * @author : liulinzhi
- * @date: 2020/07/06/18:01
- * @description:大根堆思想
+ * @date: 2020/07/08/19:33
+ * @description:
  */
-public class HeapSort {
-
-    public static void heapSort(int[] arr) {
+public class QuickSort3 {
+    public static void quickSort(int[] arr) {
         if (arr == null || arr.length < 2) {
             return;
         }
-        for (int i = 0; i < arr.length; i++) {
-            heapInsert(arr, i);
-        }
-        int size = arr.length - 1;
-        swap(arr, 0, size);
-        while (size > 0) {
-            //[0-size)
-            heapify(arr, 0, size);
-            swap(arr, 0, --size);
-        }
-
+        quickSort(arr, 0, arr.length - 1);
     }
 
-    //i位置的左孩子：2i+1，右孩子2i+2；父亲：（i-1）/2；
-    //arr[0....index-1]都是大根堆了，某个数现在处于index位置
-    public static void heapInsert(int[] arr, int index) {
-        while(arr[index] > arr[(index-1)/2])
-        {   //swap
-            arr[index] = arr[index] ^ arr[(index-1)/2];
-            arr[(index-1)/2] = arr[index] ^ arr[(index-1)/2];
-            arr[index] = arr[(index-1)/2] ^ arr[index];
-            index = (index-1)/2;
+    public static void quickSort(int[] arr, int l, int r) {
+        if (l < r) {
+            //加入了随机选取
+            swap(arr, l + (int) (Math.random() * (r - l + 1)), r);
+            int[] p = partition(arr, l, r);
+            quickSort(arr, l, p[0] - 1);
+            quickSort(arr, p[1] + 1, r);
         }
-
-
-//        int father = (index - 1) >> 1;
-//        while (arr[index] > arr[father]) {
-//            swap(arr, index, father);
-//            index = father;
-//            father = (index - 1) >> 1;
-//        }
     }
 
-    //某个数在index位置，看看能否下沉
-    public static void heapify(int[] arr, int index, int size) {
-        int left = index * 2 + 1;//左孩子
-        while (left < size) {
-            int largest = left + 1 < size && arr[left + 1] > arr[left] ? left + 1 : left;
-            largest = arr[largest] > arr[index] ? largest : index;
-            if (largest == index) {
-                break;
+    public static int[] partition(int[] arr, int l, int r) {
+        int less = l - 1;
+        int more = r;
+        while (l < more) {
+            if (arr[l] < arr[r]) {
+                swap(arr, ++less, l++);
+            } else if (arr[l] > arr[r]) {
+                swap(arr, --more, l);
+            } else {
+                l++;
             }
-            swap(arr, largest, index);
-            index = largest;
-            left = index * 2 + 1;
         }
+        swap(arr, more, r);
+        return new int[] { less + 1, more };
     }
-
 
     public static void swap(int[] arr, int i, int j) {
         int tmp = arr[i];
@@ -66,6 +45,7 @@ public class HeapSort {
         arr[j] = tmp;
     }
 
+    // for test
     public static void comparator(int[] arr) {
         Arrays.sort(arr);
     }
@@ -121,7 +101,7 @@ public class HeapSort {
         System.out.println();
     }
 
-
+    // for test
     public static void main(String[] args) {
         int testTime = 500;
         int maxSize = 100;
@@ -130,7 +110,7 @@ public class HeapSort {
         for (int i = 0; i < testTime; i++) {
             int[] arr1 = generateRandomArray(maxSize, maxValue);
             int[] arr2 = copyArray(arr1);
-            heapSort(arr1);
+            quickSort(arr1);
             comparator(arr2);
             if (!isEqual(arr1, arr2)) {
                 succeed = false;
@@ -143,7 +123,7 @@ public class HeapSort {
 
         int[] arr = generateRandomArray(maxSize, maxValue);
         printArray(arr);
-        heapSort(arr);
+        quickSort(arr);
         printArray(arr);
 
     }
